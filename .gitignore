@@ -33,7 +33,7 @@ dist-ssr/
 build/
 
 # Local Environment & Secrets
-.env
+frontend/.env.front.example
 .env.local
 .env.development.local
 .env.test.local
