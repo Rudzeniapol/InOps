@@ -48,7 +48,6 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # IDE & Editors
-.idea/
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
@@ -80,3 +79,12 @@ cypress/screenshots/
 # Vercel / Netlify
 .vercel
 .netlify
+
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Maven
+log/
+target/
