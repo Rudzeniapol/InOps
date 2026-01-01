@@ -1,0 +1,80 @@
+alerthub/
+├── .git/
+├── .gitignore             # Глобальный игнор (IDEA, DS_Store, logs)
+├── README.md              # Документация по запуску (docker-compose up)
+├── docker-compose.yml     # Оркестрация всего проекта локально
+│
+├── backend/               # МИКРОСЕРВИСЫ (Java Spring Boot)
+│   ├── .mvn/              # Maven wrapper
+│   ├── pom.xml            # Родительский POM (BOM для версий Spring Cloud)
+│   │
+│   ├── api-gateway/       # Spring Cloud Gateway
+│   │   ├── Dockerfile
+│   │   ├── pom.xml
+│   │   └── src/main/resources/application.yml # Роуты к сервисам
+│   │
+│   ├── discovery-service/ # Eureka Server (Service Discovery)
+│   │   ├── Dockerfile
+│   │   └── src/...
+│   │
+│   ├── alert-service/     # Сервис приема алертов (Mongo + Redis)
+│   │   ├── Dockerfile
+│   │   ├── pom.xml
+│   │   └── src/main/
+│   │       ├── java/com/alerthub/alert/
+│   │       │   ├── config/       # MongoConfig, RedisConfig
+│   │       │   ├── controller/   # AlertController (REST)
+│   │       │   ├── model/        # AlertDocument (Mongo Entity)
+│   │       │   ├── service/      # DeduplicationService
+│   │       │   └── repository/   # AlertRepository
+│   │       └── resources/
+│   │           └── application.yml
+│   │
+│   ├── schedule-service/  # Сервис расписаний (PostgreSQL)
+│   │   ├── Dockerfile
+│   │   ├── pom.xml
+│   │   └── src/main/
+│   │       ├── java/com/alerthub/schedule/
+│   │       │   ├── entity/       # JPA Entities (User, Team, Shift)
+│   │       │   └── service/      # ShiftRotationService
+│   │       └── resources/
+│   │           ├── application.yml
+│   │           └── db/migration/ # FLYWAY МИГРАЦИИ
+│   │               ├── V1__init_schema.sql
+│   │               └── V2__add_escalation_policies.sql
+│   │
+│   └── notification-service/ # Рассылка (Kafka Listener -> Email)
+│       └── ...
+│
+├── frontend/              # FRONTEND (Vite + React + TS)
+│   ├── Dockerfile         # Nginx для продакшн сборки
+│   ├── package.json
+│   ├── vite.config.ts
+│   ├── tailwind.config.js
+│   ├── tsconfig.json
+│   └── src/
+│       ├── components/ui/ # Ваша дизайн-система (Button, Input...)
+│       ├── features/      # Модули (Auth, Incidents, Schedule)
+│       ├── store/         # Redux Setup
+│       └── ... (подробная структура была выше)
+│
+├── infra/                 # ИНФРАСТРУКТУРА И КОНФИГИ
+│   ├── grafana/
+│   │   ├── provisioning/  # Авто-настройка источников данных
+│   │   │   ├── datasources.yml
+│   │   │   └── dashboards.yml
+│   │   └── dashboards/    # JSON файлы дашбордов (экспорт из Grafana)
+│   │       └── alerts_overview.json
+│   │
+│   ├── prometheus/
+│   │   └── prometheus.yml # Скрейпинг метрик с Spring Boot Actuator
+│   │
+│   ├── postgres/
+│   │   └── init.sql       # Создание баз данных (create database schedule_db;)
+│   │
+│   └── mongo/
+│       └── init.js        # Настройка индексов MongoDB при старте
+│
+└── docs/                  # Документация
+    ├── architecture.drawio # Схема архитектуры
+    └── api-specs/          # OpenAPI / Swagger json файлы
